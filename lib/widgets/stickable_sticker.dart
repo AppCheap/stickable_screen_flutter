@@ -30,9 +30,11 @@ class _StickableStickerState extends State<StickableSticker> {
     _position = ValueNotifier(widget.position ?? const Offset(100, 100));
     _width = widget.maxWidth * widget.horizontalRatio!;
     Future.delayed(Duration(milliseconds: widget.delayShowing ?? 0), () {
-      setState(() {
-        _isShowing = true;
-      });
+      if(mounted){
+        setState(() {
+          _isShowing = true;
+        });
+      }
     });
     super.initState();
   }
