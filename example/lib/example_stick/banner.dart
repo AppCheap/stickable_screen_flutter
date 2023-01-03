@@ -12,13 +12,11 @@ class _BannerStickerState extends State<BannerSticker> {
   bool _isShowing = true;
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     if (_isShowing) {
       return StickableSticker(
         delayShowing: 3000,
-        maxWidth: size.width,
-        horizontalRatio: 0.9,
-        position: const Offset(20, 300),
+        position:  StickablePosition(left: 20,top: 300, right: 20),
+        height: 200,
         draggable: false,
         child: Stack(
           alignment: Alignment.center,
@@ -31,7 +29,7 @@ class _BannerStickerState extends State<BannerSticker> {
                 width: 380,
                 child: Image.asset(
                   "assets/images/banner.png",
-                  fit: BoxFit.fitWidth,
+                  fit: BoxFit.cover,
                 )),
             Align(
               alignment: Alignment.topLeft,

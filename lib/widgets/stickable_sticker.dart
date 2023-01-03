@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:stickable_screen_flutter/model/stickable_position.dart';
 
 class StickableSticker extends StatefulWidget {
   const StickableSticker({
@@ -7,28 +8,26 @@ class StickableSticker extends StatefulWidget {
     this.delayShowing,
     this.position,
     this.draggable = false,
-    this.horizontalRatio = 0.5,
-    required this.maxWidth,
+    this.height,
+    this.width,
   }) : super(key: key);
   final Widget child;
   final int? delayShowing;
-  final Offset? position;
+  final StickablePosition? position;
   final bool? draggable;
-  final double? horizontalRatio;
-  final double maxWidth;
+  final double? height;
+  final double? width;
   @override
   State<StickableSticker> createState() => _StickableStickerState();
 }
 
 class _StickableStickerState extends State<StickableSticker> {
   bool _isShowing = false;
-  late final ValueNotifier<Offset> _position;
-  late double _width;
+  late final ValueNotifier<StickablePosition> _position;
 
   @override
   void initState() {
-    _position = ValueNotifier(widget.position ?? const Offset(100, 100));
-    _width = widget.maxWidth * widget.horizontalRatio!;
+    _position = ValueNotifier(widget.position ?? StickablePosition(left: 100, top: 100));
     Future.delayed(Duration(milliseconds: widget.delayShowing ?? 0), () {
       setState(() {
         _isShowing = true;
@@ -43,27 +42,56 @@ class _StickableStickerState extends State<StickableSticker> {
       return ValueListenableBuilder(
         valueListenable: _position,
         builder: (context, position, _) {
-          return Positioned(
-            left: position.dx,
-            top: position.dy,
+          Widget child = Stack(
+            children: [
+              widget.child,
+              Align(
+                alignment: Alignment.topLeft,
+                child: GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isShowing = false;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.black.withOpacity(0.2)
+                    ),
+                    child: const Icon(
+                      Icons.close,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          );
+          return Positioned.directional(
+            textDirection: Directionality.of(context),
+            start: position.left,
+            top: position.top,
+            end: position.right,
+            bottom: position.bottom,
+            width: widget.width,
+            height: widget.height,
             child: (widget.draggable!)
                 ? Draggable(
                     maxSimultaneousDrags: 1,
                     feedback: SizedBox(
-                      width: _width,
-                      child: widget.child,
+                      width: widget.width,
+                      height: widget.height,
+                      child: child,
                     ),
+                    rootOverlay: true,
                     childWhenDragging: const SizedBox.shrink(),
-                    onDragEnd: (details) => updatePosition(details.offset),
-                    child: SizedBox(
-                      width: _width,
-                      child: widget.child,
-                    ),
+                    onDragEnd: (details) => updatePosition(StickablePosition(
+                      left: details.offset.dx,
+                      top: details.offset.dy,
+                    )),
+                    child: child,
                   )
-                : SizedBox(
-                    width: _width,
-                    child: widget.child,
-                  ),
+                : child,
           );
         },
       );
@@ -71,7 +99,7 @@ class _StickableStickerState extends State<StickableSticker> {
     return const SizedBox.shrink();
   }
 
-  void updatePosition(Offset newPosition) {
+  void updatePosition(StickablePosition newPosition) {
     _position.value = newPosition;
   }
 }

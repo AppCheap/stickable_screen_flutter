@@ -15,20 +15,20 @@ class _VoucherStickerState extends State<VoucherSticker> {
     Size size = MediaQuery.of(context).size;
     if (_isShowing) {
       return StickableSticker(
-        maxWidth: size.width,
-        horizontalRatio: 0.33,
         delayShowing: 1000,
-        position: Offset(
-          size.width - 150,
-          size.height - 100
+        position: StickablePosition(
+          left: size.width - 150,
+          top: size.height - 100
         ),
         draggable: true,
+        width: 150,
+        height: 50,
         child: Stack(
           alignment: Alignment.topLeft,
           children: [
             Image.asset(
               "assets/images/voucher.png",
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.cover,
             ),
             GestureDetector(
               onTap: () {
