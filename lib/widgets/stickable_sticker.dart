@@ -29,9 +29,11 @@ class _StickableStickerState extends State<StickableSticker> {
   void initState() {
     _position = ValueNotifier(widget.position ?? StickablePosition(left: 100, top: 100));
     Future.delayed(Duration(milliseconds: widget.delayShowing ?? 0), () {
-      setState(() {
-        _isShowing = true;
-      });
+      if(mounted){
+        setState(() {
+          _isShowing = true;
+        });
+      }
     });
     super.initState();
   }
