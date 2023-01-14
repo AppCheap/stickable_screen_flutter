@@ -1,7 +1,7 @@
 name: stickable_screen_flutter
-description: A new Flutter package project.
-version: 0.0.1
-homepage:
+description: Create stickable banner.
+version: 1.0.0
+homepage: https://github.com/AppCheap/stickable_screen_flutter
 
 environment:
   sdk: '>=2.18.0 <3.0.0'
