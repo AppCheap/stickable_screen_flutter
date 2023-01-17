@@ -10,6 +10,7 @@ class StickableSticker extends StatefulWidget {
     this.draggable = false,
     this.height,
     this.width,
+    this.closeWidget
   }) : super(key: key);
   final Widget child;
   final int? delayShowing;
@@ -17,6 +18,7 @@ class StickableSticker extends StatefulWidget {
   final bool? draggable;
   final double? height;
   final double? width;
+  final Widget? closeWidget;
   @override
   State<StickableSticker> createState() => _StickableStickerState();
 }
@@ -55,7 +57,7 @@ class _StickableStickerState extends State<StickableSticker> {
                       _isShowing = false;
                     });
                   },
-                  child: Container(
+                  child: widget.closeWidget ?? Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.black.withOpacity(0.2)
